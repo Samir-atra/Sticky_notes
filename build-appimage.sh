@@ -30,9 +30,9 @@ mkdir -p $APP_DIR/usr/share/icons/hicolor/256x256/apps/
 cp sticky_note.py $APP_DIR/usr/bin/sticky_note
 cp sticky-note.desktop $APP_DIR/usr/share/applications/
 
-# Create a placeholder icon
-# In a real project, you would replace this with a real icon file
-cp sticky-note.desktop $APP_DIR/usr/share/icons/hicolor/256x256/apps/sticky-note.png
+# Copy the application icon
+mkdir -p $APP_DIR/usr/share/icons/hicolor/scalable/apps/
+cp sticky-note.svg $APP_DIR/usr/share/icons/hicolor/scalable/apps/sticky-note.svg
 
 # Make the main script executable
 chmod +x $APP_DIR/usr/bin/sticky_note

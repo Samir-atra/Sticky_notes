@@ -2,15 +2,19 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+gi.require_version('AppIndicator3', '0.1')
+from gi.repository import Gtk, Gdk, AppIndicator3 as appindicator
 import os
+import sys
 
 NOTE_FILE = os.path.expanduser("~/.sticky_note_content")
+APPINDICATOR_ID = 'stickynote-app'
 
-class StickyNote(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="Sticky Note")
+class StickyNoteWindow(Gtk.Window):
+    def __init__(self, app):
+        super().__init__(title="Sticky Note", application=app)
         self.set_default_size(300, 300)
+
         if hasattr(self, 'set_keep_above'):
             self.set_keep_above(True)
         else:
@@ -34,7 +38,11 @@ class StickyNote(Gtk.Window):
         self.setup_styles()
         self.load_note()
 
-        self.connect("destroy", Gtk.main_quit)
+        self.connect("delete-event", self.on_delete_event)
+
+    def on_delete_event(self, widget, event):
+        self.hide()
+        return True
 
     def setup_styles(self):
         css_provider = Gtk.CssProvider()
@@ -55,7 +63,6 @@ class StickyNote(Gtk.Window):
         style_context = self.get_style_context()
         style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        # Also apply to textview
         textview_style_context = self.textview.get_style_context()
         textview_style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
@@ -80,8 +87,45 @@ class StickyNote(Gtk.Window):
         except IOError as e:
             print(f"Error saving note: {e}")
 
+class StickyNoteApp(Gtk.Application):
+    def __init__(self):
+        super().__init__(application_id='org.example.stickynote')
+        self.window = None
+
+    def do_startup(self):
+        Gtk.Application.do_startup(self)
+        self.indicator = appindicator.Indicator.new(APPINDICATOR_ID, os.path.abspath('sticky-note.svg'), appindicator.IndicatorCategory.APPLICATION_STATUS)
+        self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
+        self.indicator.set_menu(self.build_menu())
+
+    def do_activate(self):
+        if not self.window:
+            self.window = StickyNoteWindow(self)
+        self.window.present()
+
+    def build_menu(self):
+        menu = Gtk.Menu()
+        item_show_hide = Gtk.MenuItem(label='Show/Hide Note')
+        item_show_hide.connect('activate', self.on_show_hide)
+        menu.append(item_show_hide)
+
+        item_quit = Gtk.MenuItem(label='Quit')
+        item_quit.connect('activate', self.on_quit)
+        menu.append(item_quit)
+
+        menu.show_all()
+        return menu
+
+    def on_show_hide(self, widget):
+        if self.window:
+            if self.window.is_visible():
+                self.window.hide()
+            else:
+                self.window.present()
+
+    def on_quit(self, widget):
+        self.quit()
 
 if __name__ == "__main__":
-    win = StickyNote()
-    win.show_all()
-    Gtk.main()
+    app = StickyNoteApp()
+    sys.exit(app.run(sys.argv))

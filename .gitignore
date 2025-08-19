@@ -214,3 +214,6 @@ linuxdeploy-plugin-gtk.sh
 squashfs-root/
 *.AppDir/
 *.AppImage
+
+# Application Icon
+sticky-note.svg

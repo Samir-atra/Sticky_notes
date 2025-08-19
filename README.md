@@ -5,14 +5,16 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 ## Features
 
 - A simple, lightweight sticky note on your desktop.
-- Stays on top of other windows and is visible on all workspaces.
+- Stays on top of other windows and is visible on all workspaces (if supported by your system).
 - Notes are automatically saved as you type.
 - Notes are reloaded when you start the application.
+- **New:** System tray icon for easy access and management.
 
 ## Files
 
 - `sticky_note.py`: The main application script.
 - `sticky-note.desktop`: The desktop entry file.
+- `sticky-note.svg`: The application icon.
 - `build-appimage.sh`: A script to build the AppImage.
 - `README.md`: This file.
 
@@ -20,6 +22,7 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 
 - Python 3
 - PyGObject (GTK 3)
+- AppIndicator3
 
 ## Installation
 
@@ -29,7 +32,7 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 
     ```bash
     sudo apt-get update
-    sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0
+    sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-appindicator3-0.1
     ```
 
 2.  **Run the application:**
@@ -40,17 +43,27 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
     /usr/bin/python3 sticky_note.py
     ```
 
+## System Tray Icon
+
+The application runs in the background and is accessible via an icon in your system tray (the top bar in GNOME).
+
+-   **Right-click** on the icon to open a menu with the following options:
+    -   **Show/Hide Note:** Toggles the visibility of the sticky note window.
+    -   **Quit:** Exits the application.
+
+When you close the sticky note window, the application will continue running in the background. To quit the application completely, you must use the "Quit" option from the tray icon menu.
+
 ## AppImage
 
 An AppImage is a single file that contains the application and all its dependencies. It can be run on most Linux distributions without installation.
 
 ### Building the AppImage
 
-To build the AppImage, you will need `wget`. You will also need to install the development packages for GTK and librsvg2:
+To build the AppImage, you will need `wget`. You will also need to install the development packages for GTK, librsvg2, and libappindicator3:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y wget libgtk-3-dev librsvg2-dev
+sudo apt-get install -y wget libgtk-3-dev librsvg2-dev libappindicator3-dev
 ```
 
 Then, run the build script:
