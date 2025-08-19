@@ -43,6 +43,7 @@ class StickyNoteWindow(Gtk.Window):
 
         self.setup_styles()
         self.load_note()
+        self.textview.grab_focus()
 
         self.connect("delete-event", self.on_delete_event)
 
