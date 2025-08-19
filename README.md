@@ -11,53 +11,58 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 - System tray icon for easy access and management.
 - Can be run as a systemd user service.
 
-## Files
+## Getting Started
 
-- `sticky_note.py`: The main application script.
-- `sticky-note.desktop`: The desktop entry file.
-- `sticky-note.svg`: The application icon.
-- `sticky-note.service`: The systemd service file.
-- `build-appimage.sh`: A script to build the AppImage.
-- `README.md`: This file.
+### 1. Clone the Repository
 
-## Requirements
+First, clone this repository to your local machine:
 
-- Python 3
-- PyGObject (GTK 3)
-- `libappindicator3` (optional, for the best system tray icon experience)
+```bash
+git clone https://github.com/samer-aw/Sticky_notes.git
+cd Sticky_notes
+```
 
-## Installation
+### 2. Create a Virtual Environment (Optional)
 
-1.  **Install dependencies:**
+It's recommended to create a virtual environment to manage the project's dependencies:
 
-    On Ubuntu/Debian, you can install the required packages using `apt`. For the best experience, we recommend installing `gir1.2-appindicator3-0.1`.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-    ```bash
-    # Core dependencies
-    sudo apt-get update
-    sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0
+### 3. Install System Dependencies
 
-    # Optional, for the best tray icon experience
-    sudo apt-get install -y gir1.2-appindicator3-0.1
-    ```
+This application requires some system libraries to be installed. On Ubuntu/Debian, you can install them with `apt`:
 
-2.  **Run the application:**
+```bash
+# Core dependencies
+sudo apt-get update
+sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0
 
-    You can run the application directly from the command line:
+# Optional, for the best tray icon experience
+sudo apt-get install -y gir1.2-appindicator3-0.1
+```
 
-    ```bash
-    /usr/bin/python3 sticky_note.py
-    ```
+## Usage
 
-    However, for a better experience, we recommend running it as a service (see below).
+You can run the application in several ways:
 
-## Running as a Service (systemd)
+### Direct Execution
 
-To run the application as a background service that starts automatically when you log in, you can use the provided systemd service file.
+You can run the application directly from the command line:
+
+```bash
+/usr/bin/python3 sticky_note.py
+```
+
+### Running as a Service (systemd)
+
+For the best experience, you can run the application as a background service that starts automatically when you log in.
 
 1.  **Edit the service file:**
 
-    Open the `sticky-note.service` file and replace `/path/to/your/project/sticky_note.py` with the absolute path to the `sticky_note.py` script on your system.
+    Open the `sticky-note.service` file and replace `/path/to/your/project/sticky_note.py` with the absolute path to the `sticky_note.py` script in the cloned repository.
 
 2.  **Install the service file:**
 
@@ -77,14 +82,15 @@ To run the application as a background service that starts automatically when yo
     systemctl --user enable --now sticky-note.service
     ```
 
-    The `--now` flag will both enable the service to start on login and start it immediately.
+### Using the Desktop Launcher
 
-### Managing the Service
+A `sticky-note.desktop` file is provided to allow launching the application from your desktop's application menu. To use it, you may need to copy it to `~/.local/share/applications/` and make it executable:
 
--   **Start the service:** `systemctl --user start sticky-note.service`
--   **Stop the service:** `systemctl --user stop sticky-note.service`
--   **Check the status:** `systemctl --user status sticky-note.service`
--   **View the logs:** `journalctl --user -u sticky-note.service`
+```bash
+mkdir -p ~/.local/share/applications/
+cp sticky-note.desktop ~/.local/share/applications/
+chmod +x ~/.local/share/applications/sticky-note.desktop
+```
 
 ## System Tray Icon
 
@@ -94,9 +100,7 @@ The application runs in the background and is accessible via an icon in your sys
     -   **Show/Hide Note:** Toggles the visibility of the sticky note window.
     -   **Quit:** Exits the application.
 
-When you close the sticky note window, the application will continue running in the background. To quit the application completely, you must use the "Quit" option from the tray icon menu.
-
-## AppImage
+## AppImage (Alternative Distribution)
 
 An AppImage is a single file that contains the application and all its dependencies. It can be run on most Linux distributions without installation.
 
@@ -116,8 +120,6 @@ chmod +x build-appimage.sh
 ./build-appimage.sh
 ```
 
-This will create an AppImage file in the current directory (e.g., `StickyNote-x86_64.AppImage`).
-
 ### Running the AppImage
 
 To run the AppImage, make it executable and then run it:
@@ -126,15 +128,3 @@ To run the AppImage, make it executable and then run it:
 chmod +x StickyNote-x86_64.AppImage
 ./StickyNote-x86_64.AppImage
 ```
-
-## Desktop Launcher
-
-A `sticky-note.desktop` file is provided to allow launching the application from your desktop's application menu. To use it, you may need to copy it to `~/.local/share/applications/` and make it executable:
-
-```bash
-mkdir -p ~/.local/share/applications/
-cp sticky-note.desktop ~/.local/share/applications/
-chmod +x ~/.local/share/applications/sticky-note.desktop
-```
-
-After that, you should be able to find "Sticky Note" in your application launcher.
