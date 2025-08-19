@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sticky Note
+Exec=sticky_note
+Icon=sticky-note
+Type=Application
+Categories=Utility;GTK;

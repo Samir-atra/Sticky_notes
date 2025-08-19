@@ -65,7 +65,7 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
-# Scrapy stuff:
+# Sc scrapy stuff:
 .scrapy
 
 # Sphinx documentation
@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# AppImage tools
+linuxdeploy-x86_64.AppImage
+linuxdeploy-plugin-gtk.sh
+
+# AppImage build artifacts
+squashfs-root/
+*.AppDir/
+*.AppImage
