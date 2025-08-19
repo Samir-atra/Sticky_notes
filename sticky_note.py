@@ -21,15 +21,15 @@ class StickyNoteWindow(Gtk.Window):
         super().__init__(title="Sticky Note", application=app)
         self.set_default_size(300, 300)
 
-        if hasattr(self, 'set_keep_above'):
-            self.set_keep_above(True)
-        else:
-            print("Warning: 'set_keep_above' method not found. The window will not stay on top.")
+        # if hasattr(self, 'set_keep_above'):
+        #     self.set_keep_above(True)
+        # else:
+        #     print("Warning: 'set_keep_above' method not found. The window will not stay on top.")
 
-        if hasattr(self, 'set_sticky'):
-            self.set_sticky(True)
-        else:
-            print("Warning: 'set_sticky' method not found. The window will not be sticky.")
+        # if hasattr(self, 'set_sticky'):
+        #     self.set_sticky(True)
+        # else:
+        #     print("Warning: 'set_sticky' method not found. The window will not be sticky.")
 
         self.scrolled_window = Gtk.ScrolledWindow()
         self.add(self.scrolled_window)
