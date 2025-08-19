@@ -75,6 +75,20 @@ class StickyNote(Gtk.Window):
 
 
 if __name__ == "__main__":
+    import inspect
+
     win = StickyNote()
+
+    print("--- Debug Information ---")
+    print(f"Object type: {type(win)}")
+    print("Inheritance chain (MRO):")
+    for cls in inspect.getmro(StickyNote):
+        print(f"  - {cls}")
+
+    print("\nMethods available on the 'win' object (searching for 'sticky'):")
+    methods = [m for m in dir(win) if 'sticky' in m.lower()]
+    print(methods)
+    print("--- End Debug Information ---\n")
+
     win.show_all()
     Gtk.main()
