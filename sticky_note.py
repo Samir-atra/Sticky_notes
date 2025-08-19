@@ -43,13 +43,16 @@ class StickyNoteWindow(Gtk.Window):
 
         self.setup_styles()
         self.load_note()
-        self.textview.grab_focus()
 
         self.connect("delete-event", self.on_delete_event)
+        self.connect("show", self.on_window_show)
 
     def on_delete_event(self, widget, event):
         self.hide()
         return True
+
+    def on_window_show(self, widget):
+        self.textview.grab_focus()
 
     def setup_styles(self):
         css_provider = Gtk.CssProvider()
