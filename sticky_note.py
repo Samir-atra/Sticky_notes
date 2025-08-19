@@ -9,7 +9,7 @@ NOTE_FILE = os.path.expanduser("~/.sticky_note_content")
 
 class StickyNote(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Sticky Note")
+        super().__init__(title="Sticky Note")
         self.set_default_size(300, 300)
         self.set_keep_above(True)
         self.set_sticky(True)
