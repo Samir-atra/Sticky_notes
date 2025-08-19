@@ -1,0 +1,10 @@
+[Unit]
+Description=Sticky Note Application
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/python3 /path/to/your/project/sticky_note.py
+Restart=always
+
+[Install]
+WantedBy=graphical-session.target

@@ -9,12 +9,14 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 - Notes are automatically saved as you type.
 - Notes are reloaded when you start the application.
 - System tray icon for easy access and management.
+- Can be run as a systemd user service.
 
 ## Files
 
 - `sticky_note.py`: The main application script.
 - `sticky-note.desktop`: The desktop entry file.
 - `sticky-note.svg`: The application icon.
+- `sticky-note.service`: The systemd service file.
 - `build-appimage.sh`: A script to build the AppImage.
 - `README.md`: This file.
 
@@ -41,11 +43,48 @@ A simple sticky note application for Linux Ubuntu desktops. It provides a small,
 
 2.  **Run the application:**
 
-    To run the application, simply execute the `sticky_note.py` script using the system's python interpreter:
+    You can run the application directly from the command line:
 
     ```bash
     /usr/bin/python3 sticky_note.py
     ```
+
+    However, for a better experience, we recommend running it as a service (see below).
+
+## Running as a Service (systemd)
+
+To run the application as a background service that starts automatically when you log in, you can use the provided systemd service file.
+
+1.  **Edit the service file:**
+
+    Open the `sticky-note.service` file and replace `/path/to/your/project/sticky_note.py` with the absolute path to the `sticky_note.py` script on your system.
+
+2.  **Install the service file:**
+
+    Copy the edited service file to your systemd user directory:
+
+    ```bash
+    mkdir -p ~/.config/systemd/user/
+    cp sticky-note.service ~/.config/systemd/user/
+    ```
+
+3.  **Enable and start the service:**
+
+    Reload the systemd user daemon, then enable and start the service:
+
+    ```bash
+    systemctl --user daemon-reload
+    systemctl --user enable --now sticky-note.service
+    ```
+
+    The `--now` flag will both enable the service to start on login and start it immediately.
+
+### Managing the Service
+
+-   **Start the service:** `systemctl --user start sticky-note.service`
+-   **Stop the service:** `systemctl --user stop sticky-note.service`
+-   **Check the status:** `systemctl --user status sticky-note.service`
+-   **View the logs:** `journalctl --user -u sticky-note.service`
 
 ## System Tray Icon
 
@@ -99,16 +138,3 @@ chmod +x ~/.local/share/applications/sticky-note.desktop
 ```
 
 After that, you should be able to find "Sticky Note" in your application launcher.
-
-## Run on Startup
-
-To make the sticky note appear every time you start your computer, you can add it to your desktop environment's startup applications.
-
-The exact steps may vary depending on your desktop environment (GNOME, KDE, XFCE, etc.), but the general process is:
-
-1.  Open your "Startup Applications" or "Autostart" settings.
-2.  Add a new startup program.
-3.  In the "Command" field, enter the full path to the `sticky_note.py` script (e.g., `/usr/bin/python3 /path/to/sticky_note.py`) or the AppImage file.
-4.  Give it a name (e.g., "Sticky Note") and save it.
-
-Alternatively, you can manually create a `.desktop` file in `~/.config/autostart/`. You can copy the `sticky-note.desktop` file there, but you will need to edit the `Exec` line to have the full path to the executable.
