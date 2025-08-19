@@ -9,7 +9,7 @@ try:
 except (ValueError, ImportError):
     HAS_APPINDICATOR = False
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 import os
 import sys
 
@@ -52,7 +52,9 @@ class StickyNoteWindow(Gtk.Window):
         return True
 
     def on_window_show(self, widget):
-        self.textview.grab_focus()
+        # We use a short timeout to ensure the window manager has had time
+        # to process the window showing before we try to grab focus.
+        GLib.timeout_add(100, self.textview.grab_focus)
 
     def setup_styles(self):
         css_provider = Gtk.CssProvider()
