@@ -9,21 +9,17 @@ NOTE_FILE = os.path.expanduser("~/.sticky_note_content")
 
 class StickyNote(Gtk.Window):
     def __init__(self):
-        import inspect
-        print("--- Debug Information (inside __init__) ---")
-        print(f"Object type: {type(self)}")
-        print("Inheritance chain (MRO):")
-        for cls in inspect.getmro(type(self)):
-            print(f"  - {cls}")
-
-        print("\nMethods available on the 'self' object (searching for 'sticky'):")
-        methods = [m for m in dir(self) if 'sticky' in m.lower()]
-        print(methods)
-        print("--- End Debug Information ---\n")
         super().__init__(title="Sticky Note")
         self.set_default_size(300, 300)
-        self.set_keep_above(True)
-        self.set_sticky(True)
+        if hasattr(self, 'set_keep_above'):
+            self.set_keep_above(True)
+        else:
+            print("Warning: 'set_keep_above' method not found. The window will not stay on top.")
+
+        if hasattr(self, 'set_sticky'):
+            self.set_sticky(True)
+        else:
+            print("Warning: 'set_sticky' method not found. The window will not be sticky.")
 
         self.scrolled_window = Gtk.ScrolledWindow()
         self.add(self.scrolled_window)
