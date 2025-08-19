@@ -53,8 +53,8 @@ class StickyNoteWindow(Gtk.Window):
 
     def on_window_show(self, widget):
         # We use a short timeout to ensure the window manager has had time
-        # to process the window showing before we try to grab focus.
-        GLib.timeout_add(100, self.textview.grab_focus)
+        # to process the window showing before we try to activate focus.
+        GLib.timeout_add(100, self.activate_focus)
 
     def setup_styles(self):
         css_provider = Gtk.CssProvider()
