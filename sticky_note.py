@@ -2,8 +2,14 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('AppIndicator3', '0.1')
-from gi.repository import Gtk, Gdk, AppIndicator3 as appindicator
+try:
+    gi.require_version('AppIndicator3', '0.1')
+    from gi.repository import AppIndicator3 as appindicator
+    HAS_APPINDICATOR = True
+except (ValueError, ImportError):
+    HAS_APPINDICATOR = False
+
+from gi.repository import Gtk, Gdk
 import os
 import sys
 
@@ -91,12 +97,21 @@ class StickyNoteApp(Gtk.Application):
     def __init__(self):
         super().__init__(application_id='org.example.stickynote')
         self.window = None
+        self.indicator = None
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
-        self.indicator = appindicator.Indicator.new(APPINDICATOR_ID, os.path.abspath('sticky-note.svg'), appindicator.IndicatorCategory.APPLICATION_STATUS)
-        self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
-        self.indicator.set_menu(self.build_menu())
+        self.menu = self.build_menu()
+
+        if HAS_APPINDICATOR:
+            self.indicator = appindicator.Indicator.new(APPINDICATOR_ID, os.path.abspath('sticky-note.svg'), appindicator.IndicatorCategory.APPLICATION_STATUS)
+            self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
+            self.indicator.set_menu(self.menu)
+        else:
+            self.indicator = Gtk.StatusIcon()
+            self.indicator.set_from_file(os.path.abspath('sticky-note.svg'))
+            self.indicator.set_tooltip_text("Sticky Note")
+            self.indicator.connect("popup-menu", self.on_status_icon_popup_menu)
 
     def do_activate(self):
         if not self.window:
@@ -115,6 +130,9 @@ class StickyNoteApp(Gtk.Application):
 
         menu.show_all()
         return menu
+
+    def on_status_icon_popup_menu(self, icon, button, time):
+        self.menu.popup(None, None, None, None, button, time)
 
     def on_show_hide(self, widget):
         if self.window:
