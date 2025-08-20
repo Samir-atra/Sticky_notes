@@ -128,3 +128,54 @@ To run the AppImage, make it executable and then run it:
 chmod +x StickyNote-x86_64.AppImage
 ./StickyNote-x86_64.AppImage
 ```
+
+## Uninstallation
+
+To completely remove the application and all its related files from your computer, follow these steps.
+
+**1. Stop and Disable the systemd Service**
+
+If you set up the systemd service, stop and disable it first:
+
+```bash
+systemctl --user stop sticky-note.service
+systemctl --user disable sticky-note.service
+rm ~/.config/systemd/user/sticky-note.service
+systemctl --user daemon-reload
+```
+
+**2. Remove the Desktop Launcher**
+
+If you installed the desktop launcher, remove it with this command:
+
+```bash
+rm ~/.local/share/applications/sticky-note.desktop
+```
+
+**3. Remove the Application Files**
+
+Delete the directory where you cloned the repository.
+
+```bash
+# Make sure you are in the correct parent directory before running this!
+rm -rf Sticky_notes
+```
+
+**4. Remove the Saved Note Data**
+
+The application saves your notes to a hidden file in your home directory. You can remove it with this command:
+
+```bash
+rm ~/.sticky_note_content
+```
+
+**5. Uninstall System Dependencies (Optional)**
+
+This application requires some system libraries. If you are sure you don't need them for any other applications, you can uninstall them.
+
+**Warning:** The following command will remove core GTK and Python libraries from your system. Other applications depend on these libraries. Removing them could break other applications or parts of your desktop environment. **Proceed with extreme caution.** It is often safer to leave these libraries installed.
+
+```bash
+# This command is potentially dangerous. Only run it if you are sure.
+# sudo apt-get autoremove --purge python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-appindicator3-0.1
+```
